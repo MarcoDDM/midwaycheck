@@ -1,0 +1,12 @@
+<h1>Encuentra el mejor punto intermedio</h1>
+<%= form_with url: locations_path, method: :post do %>
+  <div>
+    <%= label_tag :address1, 'Dirección o ciudad 1' %>
+    <%= text_field_tag :address1 %>
+  </div>
+  <div>
+    <%= label_tag :address2, 'Dirección o ciudad 2' %>
+    <%= text_field_tag :address2 %>
+  </div>
+  <%= submit_tag 'Buscar' %>
+<% end %>

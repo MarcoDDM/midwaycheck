@@ -1,0 +1,12 @@
+<h1>Lugares recomendados cerca del punto intermedio</h1>
+<div id="map" style="height: 500px;"></div>
+<% if @places.any? %>
+  <ul>
+    <% @places.each do |place| %>
+      <li><%= place['name'] %> - <%= place['vicinity'] %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No se encontraron lugares cercanos.</p>
+<% end %>
+<%= link_to 'Nueva búsqueda', new_location_path %>
