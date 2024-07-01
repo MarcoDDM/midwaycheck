@@ -1,16 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Midwaycheck</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MidpointFinder</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
     <%= yield %>
+
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.credentials.dig(:google_maps, :api_key)}&callback=initMap", async: true, defer: true %>
+    <script>
+      function initMap() {
+        var mapOptions = {
+          zoom: 12,
+          <% if @midpoint.present? %>
+            center: { lat: <%= @midpoint[0] %>, lng: <%= @midpoint[1] %> }
+          <% else %>
+            // Fallback center if @midpoint is not defined
+            center: { lat: 0, lng: 0 }  // Adjust default center as needed
+          <% end %>
+        };
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        
+        <% if @places.present? %>
+          <% @places.each do |place| %>
+            new google.maps.Marker({
+              position: { lat: <%= place['geometry']['location']['lat'] %>, lng: <%= place['geometry']['location']['lng'] %> },
+              map: map,
+              title: "<%= place['name'] %>"
+            });
+          <% end %>
+        <% else %>
+          console.error("Error: @places is not defined or empty.");
+        <% end %>
+      }
+    </script>
   </body>
 </html>
