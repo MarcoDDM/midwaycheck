@@ -1,0 +1,133 @@
+/* General layout */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Header */
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.catchy-phrase {
+  text-align: center;
+  color: #666;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+/* Form styles */
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  color: #555;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px; /* Ajustar el ancho según sea necesario */
+}
+
+input[type="submit"] {
+  margin-top: 17px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Results styles */
+.results {
+  margin-top: 20px;
+  width: 40%;
+  overflow-y: auto; /* Para permitir desplazamiento si hay muchos resultados */
+}
+
+.results ul {
+  list-style: none;
+  padding: 0;
+}
+
+.results li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.results li img {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.results li:last-child {
+  border-bottom: none;
+}
+
+/* Map container */
+.map-and-results {
+  display: flex;
+  gap: 20px;
+}
+
+#map {
+  flex-grow: 1;
+  height: 500px;
+}
+
+.btn-container {
+  text-align: center;
+  margin-top: 20px;
+  clear: both; /* Asegura que el botón esté debajo del contenido flotante */
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
