@@ -3,6 +3,8 @@ require 'json'
 
 class LocationsController < ApplicationController
   def new
+    @address1 = params[:address1]
+    @address2 = params[:address2]
   end
 
   def create
@@ -16,17 +18,19 @@ class LocationsController < ApplicationController
       @midpoint = find_midpoint(coords1, coords2)
       @places = find_places(@midpoint)
     else
-      flash[:alert] = "No se pudieron geocodificar una o ambas direcciones."
-      render :new and return
+      flash.now[:alert] = "No se pudieron geocodificar una o ambas direcciones."
+      render :new
     end
+  rescue StandardError => e
+    flash.now[:alert] = "Ocurrió un error al procesar la búsqueda: #{e.message}"
+    render :new
   end
 
   private
 
   def geocode(address)
     api_key = Rails.application.credentials.dig(:google_maps, :api_key)
-    encoded_address = URI.encode_www_form_component(address)
-    url = URI("https://maps.googleapis.com/maps/api/geocode/json?address=#{encoded_address}&key=#{api_key}")
+    url = URI("https://maps.googleapis.com/maps/api/geocode/json?address=#{URI.encode_www_form_component(address)}&key=#{api_key}")
     response = Net::HTTP.get(url)
     data = JSON.parse(response)
 
@@ -51,6 +55,16 @@ class LocationsController < ApplicationController
     types = 'cafe|bar|shopping_mall|park'
     url = URI("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{lat},#{lng}&radius=#{radius}&type=#{types}&key=#{api_key}")
     response = Net::HTTP.get(url)
-    JSON.parse(response)['results']
+    places = JSON.parse(response)['results'].first(5)
+
+    places.each do |place|
+      if place['photos']
+        place['photo_url'] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{place['photos'][0]['photo_reference']}&key=#{api_key}"
+      else
+        place['photo_url'] = nil
+      end
+    end
+
+    places
   end
 end
