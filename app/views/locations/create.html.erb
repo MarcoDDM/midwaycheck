@@ -1,12 +1,31 @@
-<h1>Lugares recomendados cerca del punto intermedio</h1>
-<div id="map" style="height: 500px;"></div>
-<% if @places.any? %>
-  <ul>
-    <% @places.each do |place| %>
-      <li><%= place['name'] %> - <%= place['vicinity'] %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No se encontraron lugares cercanos.</p>
-<% end %>
-<%= link_to 'Nueva búsqueda', new_location_path %>
+<div class="container">
+  <h1>Lugares recomendados cerca del punto intermedio</h1>
+  
+  <% if @address1.present? && @address2.present? %>
+    <p>Entre <%= @address1 %> y <%= @address2 %></p>
+  <% end %>
+
+  <div class="map-and-results">
+    <div id="map"></div>
+    <div class="results">
+      <% if @places.any? %>
+        <ul>
+          <% @places.each do |place| %>
+            <li>
+              <% if place['photo_url'] %>
+                <img src="<%= place['photo_url'] %>" alt="<%= place['name'] %>" style="width:100px;height:auto;margin-right:10px;vertical-align:middle;">
+              <% end %>
+              <%= place['name'] %> - <%= place['vicinity'] %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No se encontraron lugares cercanos.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="btn-container">
+    <%= link_to 'Nueva búsqueda', new_location_path, class: "btn" %>
+  </div>
+</div>
