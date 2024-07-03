@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MidpointFinder</title>
+    <title>Midway Check</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'custom', media: 'all' %> 
     <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
     <%= yield %>
 
-    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.credentials.dig(:google_maps, :api_key)}&callback=initMap", async: true, defer: true %>
-    <script>
-      function initMap() {
-        var mapOptions = {
-          zoom: 12,
-          <% if @midpoint.present? %>
+    <% if @midpoint.present? && @places.present? %>
+      <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{Rails.application.credentials.dig(:google_maps, :api_key)}&callback=initMap", async: true, defer: true %>
+      <script>
+        function initMap() {
+          var mapOptions = {
+            zoom: 12,
             center: { lat: <%= @midpoint[0] %>, lng: <%= @midpoint[1] %> }
-          <% else %>
-            // Fallback center if @midpoint is not defined
-            center: { lat: 0, lng: 0 }  // Adjust default center as needed
-          <% end %>
-        };
-        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        
-        <% if @places.present? %>
+          };
+          var map = new google.maps.Map(document.getElementById('map'), mapOptions);
           <% @places.each do |place| %>
             new google.maps.Marker({
               position: { lat: <%= place['geometry']['location']['lat'] %>, lng: <%= place['geometry']['location']['lng'] %> },
@@ -34,10 +29,8 @@
               title: "<%= place['name'] %>"
             });
           <% end %>
-        <% else %>
-          console.error("Error: @places is not defined or empty.");
-        <% end %>
-      }
-    </script>
+        }
+      </script>
+    <% end %>
   </body>
 </html>
