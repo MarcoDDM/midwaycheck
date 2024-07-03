@@ -57,3 +57,10 @@
 
 # Ignore sensitive credentials files
 /config/credentials.yml.enc
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
