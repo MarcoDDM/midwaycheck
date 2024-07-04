@@ -130,7 +130,7 @@ GEM
     pg (1.5.6-x64-mingw-ucrt)
     psych (5.1.2)
       stringio
-    puma (5.6.8)
+    puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.8.0)
     rack (3.1.4)
@@ -227,7 +227,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   jbuilder (~> 2.7)
   pg (~> 1.1)
-  puma (~> 5.0)
+  puma (~> 6.0)
   rails (~> 7.0)
   sass-rails (>= 6)
   sqlite3 (~> 1.4)
