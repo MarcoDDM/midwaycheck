@@ -1,133 +1,84 @@
-/* General layout */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
 }
 
 .container {
-  width: 80%;
-  margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Header */
 h1 {
+  color: #2c3e50;
   text-align: center;
-  color: #333;
 }
 
-.catchy-phrase {
-  text-align: center;
-  color: #666;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 18px;
-}
-
-/* Form styles */
-form {
+.map-and-results {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: bold;
-  color: #555;
-}
-
-input[type="text"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 250px; /* Ajustar el ancho según sea necesario */
-}
-
-input[type="submit"] {
-  margin-top: 17px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-/* Results styles */
-.results {
+  gap: 20px;
   margin-top: 20px;
-  width: 40%;
-  overflow-y: auto; /* Para permitir desplazamiento si hay muchos resultados */
+}
+
+#map {
+  flex: 1;
+  height: 600px;
+  background-color: #ddd;
+  border-radius: 10px;
+  position: relative;
+}
+
+.results {
+  flex: 1;
+  max-width: 400px;
 }
 
 .results ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
 }
 
 .results li {
   display: flex;
   align-items: center;
-  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.results img {
+  border-radius: 5px;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header, .modal-footer {
   border-bottom: 1px solid #ddd;
 }
 
-.results li img {
-  width: 100px;
-  height: auto;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.results li:last-child {
-  border-bottom: none;
-}
-
-/* Map container */
-.map-and-results {
-  display: flex;
-  gap: 20px;
-}
-
-#map {
-  flex-grow: 1;
-  height: 500px;
+.modal-body {
+  padding: 20px;
 }
 
 .btn-container {
   text-align: center;
   margin-top: 20px;
-  clear: both; /* Asegura que el botón esté debajo del contenido flotante */
 }
 
 .btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
-  font-size: 16px;
-  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
   text-decoration: none;
+  display: inline-block;
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #2980b9;
 }
-
