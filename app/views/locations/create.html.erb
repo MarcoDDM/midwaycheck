@@ -1,31 +1,80 @@
-<div class="container">
-  <h1>Lugares recomendados cerca del punto intermedio</h1>
-  
-  <% if @address1.present? && @address2.present? %>
-    <p>Entre <%= @address1 %> y <%= @address2 %></p>
-  <% end %>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resultados - Encuentra tu punto de encuentro perfecto</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <!-- Agrega aquí tus estilos y scripts necesarios -->
+</head>
+<body>
+  <div class="container">
+    <h1>Lugares recomendados cerca del punto intermedio</h1>
+    
+    <% if @address1.present? && @address2.present? %>
+      <p>Entre <%= @address1 %> y <%= @address2 %></p>
+    <% end %>
 
-  <div class="map-and-results">
-    <div id="map"></div>
-    <div class="results">
-      <% if @places.any? %>
-        <ul>
-          <% @places.each do |place| %>
-            <li>
-              <% if place['photo_url'] %>
-                <img src="<%= place['photo_url'] %>" alt="<%= place['name'] %>" style="width:100px;height:auto;margin-right:10px;vertical-align:middle;">
-              <% end %>
-              <%= place['name'] %> - <%= place['vicinity'] %>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p>No se encontraron lugares cercanos.</p>
-      <% end %>
+    <div class="map-and-results">
+      <div id="map"></div>
+      <div class="results">
+        <% if @places.present? && @places.any? %>
+          <ul>
+            <% @places.each do |place| %>
+              <li>
+                <% if place['photo_url'] %>
+                  <img src="<%= place['photo_url'] %>" alt="<%= place['name'] %>" style="width:100px;height:auto;margin-right:10px;vertical-align:middle;">
+                <% end %>
+                <a href="#" data-toggle="modal" data-target="#placeModal<%= place['place_id'] %>">
+                  <%= place['name'] %> - <%= place['vicinity'] %>
+                </a>
+              </li>
+
+              <div class="modal fade" id="placeModal<%= place['place_id'] %>" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel<%= place['place_id'] %>" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="placeModalLabel<%= place['place_id'] %>"><%= place['name'] %></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <% if place['photo_url'] %>
+                        <img src="<%= place['photo_url'] %>" alt="<%= place['name'] %>" style="width:100%;height:auto;margin-bottom:10px;">
+                      <% end %>
+                      <p><strong>Dirección:</strong> <%= place['vicinity'] %></p>
+                      <p><strong>Rating:</strong> <%= place['rating'] %> / 5</p>
+                      <% if place['opening_hours'] && place['opening_hours']['weekday_text'] %>
+                        <p><strong>Horario:</strong></p>
+                        <ul>
+                          <% place['opening_hours']['weekday_text'].each do |day| %>
+                            <li><%= day %></li>
+                          <% end %>
+                        </ul>
+                      <% end %>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No se encontraron lugares cercanos.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="btn-container">
+      <%= link_to 'Nueva búsqueda', new_location_path, class: "btn" %>
     </div>
   </div>
-  
-  <div class="btn-container">
-    <%= link_to 'Nueva búsqueda', new_location_path, class: "btn" %>
-  </div>
-</div>
+
+  <%= javascript_include_tag 'https://code.jquery.com/jquery-3.5.1.slim.min.js' %>
+  <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js' %>
+  <%= javascript_include_tag 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' %>
+</body>
+</html>

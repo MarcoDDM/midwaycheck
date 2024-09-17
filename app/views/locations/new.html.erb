@@ -1,32 +1,259 @@
-<div class="container">
-  <h1>Midway Check</h1>
-  <center>
-    <h2>Encuentra el mejor punto intermedio</h2>
-  </center>
-  <p class="catchy-phrase">Si quieres reunirte con un amigo o una cita, elige el punto medio perfecto. <br>Te damos opciones como cafeterías, cines, shoppings, e incluso parques y plazas si no quieres gastar dinero.</p>
-  <br>
-  <p class="catchy-phrase">Coloca la dirección seguida de la ciudad y clickea en buscar!</p>
-  <br>
-  <br>
-  <%= form_with url: locations_path, method: :post, id: 'midway-form' do |form| %>
-    <div class="form-group">
-      <%= form.label :address1, 'Dirección o ciudad 1' %>
-      <%= form.text_field :address1, class: 'form-control' %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto Medio - Encuentra tu punto de encuentro perfecto</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .hero {
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            text-align: center;
+            padding: 50px 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-container input[type="text"],
+        .search-container select {
+            flex-grow: 1;
+            margin: 10px;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            min-width: 150px;
+        }
+        .search-container button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .search-container button:hover {
+            background-color: #27ae60;
+        }
+        .content {
+            display: flex;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .map-container {
+            flex: 1;
+            height: 600px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .map-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .places {
+            flex: 1;
+            margin-left: 30px;
+        }
+        .place-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .place-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .place-info {
+            padding: 20px;
+        }
+        .place-title {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .place-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .stars {
+            color: #f1c40f;
+            margin-right: 5px;
+        }
+        .review-count {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .place-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .place-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Encuentra tu punto de encuentro perfecto</h1>
+        <div class="search-container">
+            <form id="search-form" action="javascript:void(0);">
+                <input type="text" id="address1" placeholder="Ingresa la primera ubicación" required>
+                <input type="text" id="address2" placeholder="Ingresa la segunda ubicación" required>
+                <select id="results-count">
+                    <option value="1">1 Resultado</option>
+                    <option value="3">3 Resultados</option>
+                    <option value="5">5 Resultados</option>
+                </select>
+                <select id="place-type">
+                    <option value="restaurant">Restaurante</option>
+                    <option value="cafe">Café</option>
+                    <option value="park">Parque</option>
+                </select>
+                <button type="submit">Encontrar Punto Medio</button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-      <%= form.label :address2, 'Dirección o ciudad 2' %>
-      <%= form.text_field :address2, class: 'form-control' %>
-    </div>
-    <div class="form-group">
-      <%= form.label :results_limit, 'Mostrar resultados' %>
-      <%= form.select :results_limit, { 'Mejor' => 'best', '5 Mejores' => 'top5', 'Todos' => 'all' }, { prompt: 'Seleccionar' }, class: 'form-control' %>
-    </div>
-    <%= form.submit 'Buscar', class: 'btn btn-primary' %>
-  <% end %>
-</div>
 
-<div class="results" id="results-container">
-  <ul id="results-list">
-    <!-- Aquí se mostrarán dinámicamente los resultados -->
-  </ul>
-</div>
+    <div class="content">
+        <div class="map-container" id="map-container">
+            <div class="map-placeholder" id="map-placeholder">
+                <h2>Mapa Interactivo</h2>
+                <p>Aquí se mostrará el mapa con los lugares marcados</p>
+            </div>
+        </div>
+        <div class="places" id="places-container">
+            <h2>Lugares Destacados</h2>
+            <!-- Aquí aparecerán los resultados de búsqueda -->
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADnZLUcEqLiH5fgNfIEDZ_ZnCrNJVH1p4&libraries=places"></script>
+    <script>
+        let map, geocoder, service;
+
+        function initMap() {
+            const defaultLocation = {lat: -34.397, lng: 150.644};
+            map = new google.maps.Map(document.getElementById('map-container'), {
+                center: defaultLocation,
+                zoom: 8
+            });
+
+            geocoder = new google.maps.Geocoder();
+            service = new google.maps.places.PlacesService(map);
+        }
+
+        function calculateMidpoint(location1, location2) {
+            const lat = (location1.lat() + location2.lat()) / 2;
+            const lng = (location1.lng() + location2.lng()) / 2;
+            return { lat, lng };
+        }
+
+        function displayPlaces(midpoint, placeType, resultsCount) {
+            const request = {
+                location: midpoint,
+                radius: '5000',
+                type: [placeType]
+            };
+
+            service.nearbySearch(request, function(results, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    const placesContainer = document.getElementById('places-container');
+                    placesContainer.innerHTML = ''; // Limpiar resultados previos
+                    results.slice(0, resultsCount).forEach(place => {
+                        const placeCard = document.createElement('div');
+                        placeCard.className = 'place-card';
+                        placeCard.innerHTML = `
+                            <img class="place-image" src="${place.photos ? place.photos[0].getUrl() : 'https://via.placeholder.com/400x200'}" alt="${place.name}">
+                            <div class="place-info">
+                                <h3 class="place-title">${place.name}</h3>
+                                <div class="place-rating">
+                                    <span class="stars">${'★'.repeat(Math.round(place.rating))}</span>
+                                    <span class="review-count">(${place.user_ratings_total} opiniones)</span>
+                                </div>
+                                <a href="https://www.google.com/maps/search/?api=1&query=${place.name}&query_place_id=${place.place_id}" target="_blank" class="place-button">Ver más</a>
+                            </div>
+                        `;
+                        placesContainer.appendChild(placeCard);
+                    });
+                }
+            });
+        }
+
+        function searchMidpoint() {
+            const address1 = document.getElementById('address1').value;
+            const address2 = document.getElementById('address2').value;
+            const placeType = document.getElementById('place-type').value;
+            const resultsCount = parseInt(document.getElementById('results-count').value, 10);
+
+            if (!address1 || !address2) {
+                alert('Por favor ingresa ambas direcciones.');
+                return;
+            }
+
+            geocoder.geocode({ address: address1 }, function(results1, status1) {
+                if (status1 === 'OK') {
+                    geocoder.geocode({ address: address2 }, function(results2, status2) {
+                        if (status2 === 'OK') {
+                            const location1 = results1[0].geometry.location;
+                            const location2 = results2[0].geometry.location;
+                            const midpoint = calculateMidpoint(location1, location2);
+
+                            map.setCenter(midpoint);
+                            map.setZoom(12);
+
+                            new google.maps.Marker({ position: location1, map: map, title: 'Ubicación 1' });
+                            new google.maps.Marker({ position: location2, map: map, title: 'Ubicación 2' });
+                            new google.maps.Marker({ position: midpoint, map: map, title: 'Punto Medio' });
+
+                            displayPlaces(midpoint, placeType, resultsCount);
+                        } else {
+                            alert('No se pudo encontrar la segunda ubicación: ' + status2);
+                        }
+                    });
+                } else {
+                    alert('No se pudo encontrar la primera ubicación: ' + status1);
+                }
+            });
+        }
+
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            searchMidpoint();
+        });
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
